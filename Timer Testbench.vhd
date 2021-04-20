@@ -27,9 +27,10 @@ BEGIN
         t_tClk <= '0';
         WAIT FOR 5 ns;
     END PROCESS clk_gen;
---
-    --start_gen: PROCESS
-    --BEGIN
-    --    t_tStart <= '1';
-    --END PROCESS start_gen;
+
+    start_gen: PROCESS
+    BEGIN
+        t_tStart <= '1';
+        wait 100 ns;
+    END PROCESS start_gen;
 END ARCHITECTURE Test;
