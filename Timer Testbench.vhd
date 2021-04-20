@@ -10,15 +10,17 @@ Architecture Test OF TimerBench IS
     SIGNAL t_Data_In: STD_LOGIC_VECTOR(9 DOWNTO 0);
     SIGNAL t_tClk, t_tStart: STD_LOGIC;
     SIGNAL t_Time_Out: STD_LOGIC;
+    SIGNAL t_Count: STD_LOGIC_VECTOR(9 DOWNTO 0);
     COMPONENT Timer IS
         PORT (
             Data_In: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
             tClk, tStart: IN STD_LOGIC;
-            Time_Out: OUT STD_LOGIC
+            Time_Out: OUT STD_LOGIC;
+            Count: OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
         );
     END COMPONENT;
 BEGIN
-    DUT: Timer Port Map (Data_In => t_Data_In, tClk => t_tClk, tStart => t_tStart, Time_Out => t_Time_Out);
+    DUT: Timer Port Map (Data_In => t_Data_In, tClk => t_tClk, tStart => t_tStart, Time_Out => t_Time_Out, Count => t_Count);
 
     init: PROCESS
     BEGIN
