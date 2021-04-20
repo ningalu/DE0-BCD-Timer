@@ -7,7 +7,8 @@ ENTITY Timer IS
     PORT (
         Data_In: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
         tClk, tStart: IN STD_LOGIC;
-        Time_Out: OUT STD_LOGIC
+        Time_Out: OUT STD_LOGIC;
+        Count: OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
     );
 END ENTITY Timer;
 
@@ -69,5 +70,7 @@ BEGIN
             suEnable <= '0';
             slEnable <= '0';
         END IF;
+        Count <= mQ(1 DOWNTO 0) & suQ & slQ;
+
     END PROCESS;
 END ARCHITECTURE Counters;
