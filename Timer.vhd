@@ -48,7 +48,7 @@ BEGIN
     PROCESS(tStart, tClk)
     BEGIN
         IF (tStart = '1') THEN
-            slDirection <= '0';
+            iDirection <= '1';
             slInit <= '0';
             slEnable <= '1';
             Count(9 DOWNTO 8) <= mQ(1 DOWNTO 0);
