@@ -20,6 +20,12 @@ Architecture Test OF TimerBench IS
 BEGIN
     DUT: Timer Port Map (Data_In => t_Data_In, tClk => t_tClk, tStart => t_tStart, Time_Out => t_Time_Out);
 
+    init: PROCESS
+    BEGIN
+        t_tStart <= '1';
+        WAIT;
+    END PROCESS init;
+
     clk_gen: PROCESS
     BEGIN
         t_tClk <= '1';
@@ -28,9 +34,4 @@ BEGIN
         WAIT FOR 5 ns;
     END PROCESS clk_gen;
 
-    start_gen: PROCESS
-    BEGIN
-        t_tStart <= '1';
-        wait 100 ns;
-    END PROCESS start_gen;
 END ARCHITECTURE Test;
