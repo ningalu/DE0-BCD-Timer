@@ -45,9 +45,12 @@ BEGIN
     suCon: BCDto7SEG PORT MAP(BCD_in => suQ, all_off => iall_off, LED_out => suLED_out);
     slCon: BCDto7SEG PORT MAP(BCD_in => slQ, all_off => iall_off, LED_out => slLED_out);
 
-    PROCESS(tStart)
+    PROCESS(tStart, tClk)
     BEGIN
         IF (tStart = '1') THEN
+            Count(9 DOWNTO 8) <= mQ(1 DOWNTO 0);
+            Count(7 DOWNTO 4) <= suQ;
+            COUNT (3 DOWNTO 0) <= slQ;
             IF (slQ = "1001") THEN
 
                 suEnable <= '1';
@@ -69,8 +72,9 @@ BEGIN
             mEnable <= '0';
             suEnable <= '0';
             slEnable <= '0';
+            Time_Out <= '1';
         END IF;
-        Count <= mQ(1 DOWNTO 0) & suQ & slQ;
+        
 
     END PROCESS;
 END ARCHITECTURE Counters;
