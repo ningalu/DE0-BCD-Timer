@@ -51,7 +51,7 @@ BEGIN
             iDirection <= '1';
             slInit <= '0';
             slEnable <= '1';
-            Count(9 DOWNTO 8) <= mQ(1 DOWNTO 0);
+            Count(9 DOWNTO 8) <= mQ(1 DOWNTO 0); -- "0001";
             Count(7 DOWNTO 4) <= suQ;
             COUNT (3 DOWNTO 0) <= slQ;
             IF (slQ = "1001") THEN
@@ -67,7 +67,7 @@ BEGIN
                 END IF;
 
             ELSE
-
+                mEnable <= '0';
                 suEnable <= '0';
             
             END IF;
