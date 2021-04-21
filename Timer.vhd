@@ -52,10 +52,6 @@ BEGIN
             iDirection <= '1';
             slInit <= '0';
             slEnable <= '1';
-            mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); -- "0001";
-            mCount(7 DOWNTO 4) := suQ;
-            mCOUNT (3 DOWNTO 0) := slQ;
-            COUNT <= Data_In - mCOUNT;
             IF (slQ = "1001") THEN
 
                 suEnable <= '1';
@@ -80,6 +76,10 @@ BEGIN
             Time_Out <= '1';
         END IF;
         
+        mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); -- "0001";
+        mCount(7 DOWNTO 4) := suQ;
+        mCOUNT (3 DOWNTO 0) := slQ;
+        COUNT <= Data_In - mCount - "0010100110";
 
     END PROCESS;
 END ARCHITECTURE Counters;
