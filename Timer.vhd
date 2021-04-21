@@ -70,10 +70,10 @@ BEGIN
             
             END IF;
         ELSE
-            mEnable <= '0';
-            suEnable <= '0';
-            slEnable <= '0';
-            Time_Out <= '1';
+            mInit = '1';
+            suInit = '1';
+            slInit = '1';
+            Time_Out = '1';
         END IF;
         
         mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
