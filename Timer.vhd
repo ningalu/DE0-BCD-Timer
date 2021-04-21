@@ -46,14 +46,16 @@ BEGIN
     slCon: BCDto7SEG PORT MAP(BCD_in => slQ, all_off => iall_off, LED_out => slLED_out);
 
     PROCESS(tStart, tClk)
+    VARIABLE mCount: STD_LOGIC_VECTOR(9 DOWNTO 0);
     BEGIN
         IF (tStart = '1') THEN
             iDirection <= '1';
             slInit <= '0';
             slEnable <= '1';
-            Count(9 DOWNTO 8) <= mQ(1 DOWNTO 0); -- "0001";
-            Count(7 DOWNTO 4) <= suQ;
-            COUNT (3 DOWNTO 0) <= slQ;
+            mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); -- "0001";
+            mCount(7 DOWNTO 4) := suQ;
+            mCOUNT (3 DOWNTO 0) := slQ;
+            COUNT <= Time_Out - mCOUNT;
             IF (slQ = "1001") THEN
 
                 suEnable <= '1';
