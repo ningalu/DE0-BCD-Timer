@@ -88,8 +88,8 @@ BEGIN
         iOffset(3 DOWNTO 0) := slOffset;
 
         IF (iOffset >= Data_In) THEN
-            Time_Out = '1';
-        ELSE:
+            Time_Out <= '1';
+        ELSE
             IF (slQ = "0000") THEN
                 slOffset := "0000";
             ELSE
