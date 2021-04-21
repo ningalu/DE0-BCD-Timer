@@ -6,7 +6,7 @@ use IEEE.numeric_std.all;
 ENTITY BCD IS 
     PORT (
         Clk, Direction, Init, Enable: IN STD_LOGIC;
-        Q: OUT STD_LOGIC_VECTOR(3 DOWNTO 0)
+        Q: OUT STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000"
     );
 END ENTITY BCD;
 
