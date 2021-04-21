@@ -52,51 +52,57 @@ BEGIN
     VARIABLE mOffset: STD_LOGIC_VECTOR(1 DOWNTO 0);
 
     BEGIN
-        IF (tStart = '1') THEN
+        --IF (rising_edge(tClk)) THEN
+            IF (tStart = '1') THEN
 
-            iDirection <= '1';
-            slInit <= '0';
-            slEnable <= '1';
-
-            IF (slQ = "1001") THEN
-
-                IF (suQ = "0101") THEN
-                    mInit <= '0';
-                    mEnable <= '1';
-                    suInit <= '1';                    
+                --iDirection <= '1';
+                --slInit <= '0';
+                --slEnable <= '1';
+                --suEnable <= '1';
+                --IF (slQ = "1001") THEN
+                --    suEnable <= '1';
+                --ELSE
+                --    suEnable <= '0';
+                --END IF;
+                iDirection <= '1';
+                slInit <= '0';
+                slEnable <= '1';
+                
+                IF (slQ = "1001") THEN
+                
+                    
+                
+                    IF (suQ = "0101") THEN
+                        mInit <= '0';
+                        mEnable <= '1';
+                        suInit <= '1';                    
+                    ELSE
+                        suInit <= '0';
+                        mEnable <= '0';
+                    END IF;
+                
+                    suEnable <= '1';
+                
                 ELSE
-                    suInit <= '0';
                     mEnable <= '0';
+                    suEnable <= '0';
+                
                 END IF;
-
-                suEnable <= '1';
-
             ELSE
-                mEnable <= '0';
-                suEnable <= '0';
-            
+                mInit <= '1';
+                suInit <= '1';
+                slInit <= '1';
+                Time_Out <= '1';
             END IF;
-        ELSE
-            mInit <= '1';
-            suInit <= '1';
-            slInit <= '1';
-            Time_Out <= '1';
-        END IF;
         
-        iOffset(9 DOWNTO 8) := mOffset; 
-        iOffset(7 DOWNTO 4) := suOffset;
-        iOffset(3 DOWNTO 0) := slOffset;
-
-        IF (iOffset >= Data_In) THEN
-            Time_Out <= '1';
-        ELSE
+        
             IF (slQ = "0000") THEN
                 slOffset := "0000";
             ELSE
                 slOffset := "0110";
             END IF;
 
-            IF ((suQ = "0000") AND (slQ = "0000")) THEN
+            IF ((suQ = "0000") AND (slQ = "0000"))THEN
                 suOffset := "0000";
             ELSE 
                 suOffset := "1010";
@@ -108,9 +114,17 @@ BEGIN
             iCount(7 DOWNTO 4) := suQ;
             iCount(3 DOWNTO 0) := slQ;
 
-            COUNT <= Data_In - iCount - iOffset;
-            COUNT1 <= iCount;
-        END IF;
-
+            iOffset(9 DOWNTO 8) := mOffset; 
+            iOffset(7 DOWNTO 4) := suOffset;
+            iOffset(3 DOWNTO 0) := slOffset;
+            IF (iCount >= Data_In) THEN
+                Time_Out <= '1';
+            ELSE
+                Time_Out <= '0';
+                COUNT <= Data_In - iCount - iOffset;
+                COUNT1 <= iCount;
+            END IF;
+        --END IF;
+        
     END PROCESS;
 END ARCHITECTURE Counters;
