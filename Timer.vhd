@@ -85,9 +85,11 @@ BEGIN
         suData := Data_In(7 DOWNTO 4);
         slData := Data_In(3 DOWNTO 0);
         
-        --IF (slQ = "0000") THEN
-
-        COUNT <= Data_In - mCount - "0010100110";
+        IF (slQ = "0000") THEN
+            COUNT <= Data_In - mCount - "0010100000";
+        ELSE
+            COUNT <= Data_In - mCount - "0010100110";
+        END IF;
         --COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
         COUNT1 <= mCount;
 
