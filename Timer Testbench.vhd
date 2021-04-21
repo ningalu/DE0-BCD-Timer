@@ -25,6 +25,7 @@ BEGIN
     init: PROCESS
     BEGIN
         t_tStart <= '1';
+        t_Data_In <= "1000000000";
         WAIT;
     END PROCESS init;
 
