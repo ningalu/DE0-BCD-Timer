@@ -83,30 +83,34 @@ BEGIN
             Time_Out <= '1';
         END IF;
         
-        IF (slQ = "0000") THEN
-            slOffset := "0000";
-        ELSE
-            slOffset := "0110";
-        END IF;
-
-        IF ((suQ = "0000") AND (slQ = "0000")) THEN
-            suOffset := "0000";
-        ELSE 
-            suOffset := "1010";
-        END IF;
-
-        mOffset := "00";
-
         iOffset(9 DOWNTO 8) := mOffset; 
         iOffset(7 DOWNTO 4) := suOffset;
         iOffset(3 DOWNTO 0) := slOffset;
 
-        iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
-        iCount(7 DOWNTO 4) := suQ;
-        iCount(3 DOWNTO 0) := slQ;
+        IF (iOffset >= Data_In) THEN
+            Time_Out = '1';
+        ELSE:
+            IF (slQ = "0000") THEN
+                slOffset := "0000";
+            ELSE
+                slOffset := "0110";
+            END IF;
 
-        COUNT <= Data_In - iCount - iOffset;
-        COUNT1 <= iCount;
+            IF ((suQ = "0000") AND (slQ = "0000")) THEN
+                suOffset := "0000";
+            ELSE 
+                suOffset := "1010";
+            END IF;
+
+            mOffset := "00";
+
+            iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
+            iCount(7 DOWNTO 4) := suQ;
+            iCount(3 DOWNTO 0) := slQ;
+
+            COUNT <= Data_In - iCount - iOffset;
+            COUNT1 <= iCount;
+        END IF;
 
     END PROCESS;
 END ARCHITECTURE Counters;
