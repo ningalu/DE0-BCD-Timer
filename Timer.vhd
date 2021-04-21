@@ -8,7 +8,7 @@ ENTITY Timer IS
         Data_In: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
         tClk, tStart: IN STD_LOGIC;
         Time_Out: OUT STD_LOGIC;
-        Count, Count1: OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
+        Count, Count1: OUT STD_LOGIC_VECTOR(9 DOWNTO 0) -- temporary
     );
 END ENTITY Timer;
 
@@ -46,9 +46,11 @@ BEGIN
     slCon: BCDto7SEG PORT MAP(BCD_in => slQ, all_off => iall_off, LED_out => slLED_out);
 
     PROCESS(tStart, tClk)
-    VARIABLE mCount: STD_LOGIC_VECTOR(9 DOWNTO 0);
-    VARIABLE suData, slData: STD_LOGIC_VECTOR(3 DOWNTO 0);
-    VARIABLE mData: STD_LOGIC_VECTOR(1 DOWNTO 0);
+    VARIABLE iCount, iOffset: STD_LOGIC_VECTOR(9 DOWNTO 0); 
+
+    VARIABLE suOffset, slOffset: STD_LOGIC_VECTOR(3 DOWNTO 0);
+    VARIABLE mOffset: STD_LOGIC_VECTOR(1 DOWNTO 0);
+
     BEGIN
         IF (tStart = '1') THEN
             iDirection <= '1';
@@ -78,20 +80,33 @@ BEGIN
             Time_Out <= '1';
         END IF;
         
-        mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
-        mCount(7 DOWNTO 4) := suQ;
-        mCOUNT (3 DOWNTO 0) := slQ;
-        mData := Data_In(9 DOWNTO 8);
-        suData := Data_In(7 DOWNTO 4);
-        slData := Data_In(3 DOWNTO 0);
-        
         IF (slQ = "0000") THEN
-            COUNT <= Data_In - mCount - "0010100000";
+            slOffset = "0000";
         ELSE
-            COUNT <= Data_In - mCount - "0010100110";
+            slOffset = "0110";
         END IF;
-        --COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
-        COUNT1 <= mCount;
+
+        iOffset(9 DOWNTO 8) := mOffset; 
+        iOffset(7 DOWNTO 4) := suOffset;
+        iOffset(3 DOWNTO 0) := slOffset;
+
+        iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
+        iCount(7 DOWNTO 4) := suQ;
+        iCount(3 DOWNTO 0) := slQ;
+
+        COUNT <= Data_In - iCount - iOffset;
+
+        --mData := Data_In(9 DOWNTO 8);
+        --suData := Data_In(7 DOWNTO 4);
+        --slData := Data_In(3 DOWNTO 0);
+        --
+        ----IF (slQ = "0000") THEN
+        ----    COUNT <= Data_In - mCount - "0010100000";
+        ----ELSE
+        --COUNT <= Data_In - mCount - "0010100110";
+        ----END IF;
+        ----COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
+        --COUNT1 <= mCount;
 
 
     END PROCESS;
