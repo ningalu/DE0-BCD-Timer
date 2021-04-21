@@ -47,6 +47,8 @@ BEGIN
 
     PROCESS(tStart, tClk)
     VARIABLE mCount: STD_LOGIC_VECTOR(9 DOWNTO 0);
+    VARIABLE suData, slData: STD_LOGIC_VECTOR(3 DOWNTO 0);
+    VARIABLE mData: STD_LOGIC_VECTOR(1 DOWNTO 0);
     BEGIN
         IF (tStart = '1') THEN
             iDirection <= '1';
@@ -70,17 +72,25 @@ BEGIN
             
             END IF;
         ELSE
-            mInit = '1';
-            suInit = '1';
-            slInit = '1';
-            Time_Out = '1';
+            mInit <= '1';
+            suInit <= '1';
+            slInit <= '1';
+            Time_Out <= '1';
         END IF;
         
         mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
         mCount(7 DOWNTO 4) := suQ;
         mCOUNT (3 DOWNTO 0) := slQ;
-        COUNT <= Data_In - mCount - "0010100111";
+        mData := Data_In(9 DOWNTO 8);
+        suData := Data_In(7 DOWNTO 4);
+        slData := Data_In(3 DOWNTO 0);
+        
+        --IF (slQ = "0000") THEN
+
+        COUNT <= Data_In - mCount - "0010100110";
+        --COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
         COUNT1 <= mCount;
+
 
     END PROCESS;
 END ARCHITECTURE Counters;
