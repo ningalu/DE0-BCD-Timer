@@ -8,7 +8,7 @@ ENTITY Timer IS
         Data_In: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
         tClk, tStart: IN STD_LOGIC;
         Time_Out: OUT STD_LOGIC;
-        Count: OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
+        Count, Count1: OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
     );
 END ENTITY Timer;
 
@@ -76,10 +76,11 @@ BEGIN
             Time_Out <= '1';
         END IF;
         
-        mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); -- "0001";
+        mCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
         mCount(7 DOWNTO 4) := suQ;
         mCOUNT (3 DOWNTO 0) := slQ;
-        COUNT <= Data_In - mCount - "0010100110";
+        COUNT <= Data_In - mCount - "0010100111";
+        COUNT1 <= mCount;
 
     END PROCESS;
 END ARCHITECTURE Counters;
