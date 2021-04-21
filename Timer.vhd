@@ -81,10 +81,13 @@ BEGIN
         END IF;
         
         IF (slQ = "0000") THEN
-            slOffset = "0000";
+            slOffset := "0000";
         ELSE
-            slOffset = "0110";
+            slOffset := "0110";
         END IF;
+
+        mOffset := "00";
+        suOffset := "1010";
 
         iOffset(9 DOWNTO 8) := mOffset; 
         iOffset(7 DOWNTO 4) := suOffset;
@@ -95,7 +98,7 @@ BEGIN
         iCount(3 DOWNTO 0) := slQ;
 
         COUNT <= Data_In - iCount - iOffset;
-
+        COUNT1 <= mCount;
         --mData := Data_In(9 DOWNTO 8);
         --suData := Data_In(7 DOWNTO 4);
         --slData := Data_In(3 DOWNTO 0);
@@ -106,7 +109,7 @@ BEGIN
         --COUNT <= Data_In - mCount - "0010100110";
         ----END IF;
         ----COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
-        --COUNT1 <= mCount;
+        --
 
 
     END PROCESS;
