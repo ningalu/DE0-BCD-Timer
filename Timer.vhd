@@ -53,20 +53,23 @@ BEGIN
 
     BEGIN
         IF (tStart = '1') THEN
+
             iDirection <= '1';
             slInit <= '0';
             slEnable <= '1';
+
             IF (slQ = "1001") THEN
 
-                suEnable <= '1';
-
                 IF (suQ = "0101") THEN
-                    suInit <= '1';
+                    mInit <= '0';
                     mEnable <= '1';
+                    suInit <= '1';                    
                 ELSE
                     suInit <= '0';
                     mEnable <= '0';
                 END IF;
+
+                suEnable <= '1';
 
             ELSE
                 mEnable <= '0';
@@ -86,8 +89,13 @@ BEGIN
             slOffset := "0110";
         END IF;
 
+        IF ((suQ = "0000") AND (slQ = "0000")) THEN
+            suOffset := "0000";
+        ELSE 
+            suOffset := "1010";
+        END IF;
+
         mOffset := "00";
-        suOffset := "1010";
 
         iOffset(9 DOWNTO 8) := mOffset; 
         iOffset(7 DOWNTO 4) := suOffset;
@@ -98,19 +106,7 @@ BEGIN
         iCount(3 DOWNTO 0) := slQ;
 
         COUNT <= Data_In - iCount - iOffset;
-        COUNT1 <= mCount;
-        --mData := Data_In(9 DOWNTO 8);
-        --suData := Data_In(7 DOWNTO 4);
-        --slData := Data_In(3 DOWNTO 0);
-        --
-        ----IF (slQ = "0000") THEN
-        ----    COUNT <= Data_In - mCount - "0010100000";
-        ----ELSE
-        --COUNT <= Data_In - mCount - "0010100110";
-        ----END IF;
-        ----COUNT <= (mData(1 DOWNTO 0) - mQ(1 DOWNTO 0)) & (suData - suQ - "0010") & (slData - slQ - "0110");
-        --
-
+        COUNT1 <= iCount;
 
     END PROCESS;
 END ARCHITECTURE Counters;
