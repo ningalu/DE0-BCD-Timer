@@ -46,7 +46,7 @@ BEGIN
     slCon: BCDto7SEG PORT MAP(BCD_in => slQ, all_off => iall_off, LED_out => slLED_out);
 
     PROCESS(tStart, tClk)
-    VARIABLE iCount, iOffset: STD_LOGIC_VECTOR(9 DOWNTO 0); 
+    VARIABLE iCount, iOffset, pCount: STD_LOGIC_VECTOR(9 DOWNTO 0); 
 
     VARIABLE suOffset, slOffset: STD_LOGIC_VECTOR(3 DOWNTO 0);
     VARIABLE mOffset: STD_LOGIC_VECTOR(1 DOWNTO 0);
@@ -54,16 +54,6 @@ BEGIN
     BEGIN
         --IF (rising_edge(tClk)) THEN
             IF (tStart = '1') THEN
-
-                --iDirection <= '1';
-                --slInit <= '0';
-                --slEnable <= '1';
-                --suEnable <= '1';
-                --IF (slQ = "1001") THEN
-                --    suEnable <= '1';
-                --ELSE
-                --    suEnable <= '0';
-                --END IF;
                 iDirection <= '1';
                 slInit <= '0';
                 slEnable <= '1';
@@ -95,33 +85,35 @@ BEGIN
                 Time_Out <= '1';
             END IF;
         
-        
-            IF (slQ = "0000") THEN
-                slOffset := "0000";
-            ELSE
-                slOffset := "0110";
-            END IF;
-
-            IF ((suQ = "0000") AND (slQ = "0000"))THEN
-                suOffset := "0000";
-            ELSE 
-                suOffset := "1010";
-            END IF;
-
             mOffset := "00";
 
             iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
             iCount(7 DOWNTO 4) := suQ;
             iCount(3 DOWNTO 0) := slQ;
 
+            pCount := Data_In - iCount;
+
+            IF (pCount(7 DOWNTO 3) > "1010") THEN
+                suOffset := "1010";
+            ELSE
+                suOffset := "0000";
+            END IF;
+
+            IF (pCount(3 DOWNTO 0) > "0110") THEN
+                slOffset := "0110";
+            ELSE 
+                slOffset := "0000";
+            END IF;
+
             iOffset(9 DOWNTO 8) := mOffset; 
             iOffset(7 DOWNTO 4) := suOffset;
             iOffset(3 DOWNTO 0) := slOffset;
-            IF (iCount >= Data_In) THEN
+
+            IF (iCount > Data_In) THEN
                 Time_Out <= '1';
             ELSE
                 Time_Out <= '0';
-                COUNT <= Data_In - iCount - iOffset;
+                COUNT <= pCount - iOffset;
                 COUNT1 <= iCount;
             END IF;
         --END IF;
