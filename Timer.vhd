@@ -8,7 +8,7 @@ ENTITY Timer IS
         Data_In: IN STD_LOGIC_VECTOR(9 DOWNTO 0);
         tClk, tStart: IN STD_LOGIC;
         Time_Out: OUT STD_LOGIC;
-        Count, Count1: OUT STD_LOGIC_VECTOR(9 DOWNTO 0); -- temporary
+        --Count, Count1: OUT STD_LOGIC_VECTOR(9 DOWNTO 0); -- temporary
         mOut, suOut, slOut: OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY Timer;
@@ -125,8 +125,8 @@ BEGIN
             ELSE
                 Time_Out <= '0';
                 fCount := pCount - iOffset;
-                Count <= fCount;
-                COUNT1 <= iCount;
+                --Count <= fCount;
+                --COUNT1 <= iCount;
             END IF;
 
             fsu <= fCount(7 DOWNTO 4);
