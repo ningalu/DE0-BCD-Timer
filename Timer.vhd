@@ -21,6 +21,8 @@ ARCHITECTURE Counters OF Timer IS
     SIGNAL suInit, suEnable: STD_LOGIC;
     SIGNAL slInit, slEnable: STD_LOGIC;
 
+    SIGNAL oClk: STD_LOGIC;
+
     SIGNAL mQ, suQ, slQ: STD_LOGIC_VECTOR(3 DOWNTO 0);
     SIGNAL mLED_out, suLED_out, slLED_out: STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL fm, fsu, fsl: STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -38,14 +40,20 @@ ARCHITECTURE Counters OF Timer IS
             LED_out: OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
         );
     END COMPONENT;
+    COMPONENT Prescaler IS
+        PORT (
+            Clk_In: IN STD_LOGIC;
+            Clk_Out: OUT STD_LOGIC
+        );
 BEGIN
 
-    mBCD: BCD PORT MAP (Clk => tClk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
-    suBCD: BCD PORT MAP (Clk => tClk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
-    slBCD: BCD PORT MAP (Clk => tClk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
+    mBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
+    suBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
+    slBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
     mCon: BCDto7SEG PORT MAP(BCD_in => fm, all_off => iall_off, LED_out => mOut);
     suCon: BCDto7SEG PORT MAP(BCD_in => fsu, all_off => iall_off, LED_out => suOut);
     slCon: BCDto7SEG PORT MAP(BCD_in => fsl, all_off => iall_off, LED_out => slOut);
+    ps: Prescaler(Clk_In => tClk, Clk_Out => oClk);
 
     PROCESS(tStart, tClk)
     VARIABLE iCount, iOffset, pCount, fCount: STD_LOGIC_VECTOR(9 DOWNTO 0); 
