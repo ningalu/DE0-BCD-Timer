@@ -63,93 +63,127 @@ BEGIN
     VARIABLE mOffset: STD_LOGIC_VECTOR(1 DOWNTO 0);
 
     BEGIN
-        --IF (rising_edge(tClk)) THEN
-            IF (tStart = '1') THEN
-                --Initialise the first digit and 7seg converters
-                iDirection <= '1';
-                slInit <= '0';
-                slEnable <= '1';
-                iall_off <= '0';
-                
-                --If the first digit is about to overflow enable the second seconds digit for one clock cycle
-                IF (slQ = "1001") THEN
-                
-                    
-                    --If the second digit is about to overflow (over 5) reset it and enable the minutes digit for one clock cycle
-                    IF (suQ = "0101") THEN
-                        mInit <= '0';
-                        mEnable <= '1';
-                        suInit <= '1';                    
-                    ELSE
-                        suInit <= '0';
-                        mEnable <= '0';
-                    END IF;
-                
-                    suEnable <= '1';
-                
-                ELSE
-                    mEnable <= '0';
-                    suEnable <= '0';
-                
-                END IF;
-            --If the timer is off reset all bits and set Time_Out
-            ELSE
-                mInit <= '1';
+        IF (rising_edge(tStart)) THEN
+            slInit <= '1';
+            suInit <= '1';
+            mInit <= '1';
+        ELSE 
+            slInit <= '0';
+            suInit <= '0';
+            mInit <= '0';
+        END IF;
+
+        IF (slQ = "1001") THEN
+            suEnable <= '1';
+
+            IF (suQ = "0110") THEN
+
                 suInit <= '1';
-                slInit <= '1';
-                Time_Out <= '1';
-                iall_off <= '0';
+                mEnable <= '1';
+
+            ELSE
+                suInit <= '0';
+                mEnable <= '0';
             END IF;
         
-            --Concatenate internal Count variable
-            iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
-            iCount(7 DOWNTO 4) := suQ;
-            iCount(3 DOWNTO 0) := slQ;
+        ELSE 
+            suEnable <= '0';
+            mEnable <= '0';
+        END IF;
 
-            --Calculate preliminary Count by subtracting the current count from Data_In
-            pCount := Data_In - iCount;
+        fm <= mQ;
+        fsu <= suQ;
+        fsl <= slQ;
 
-            --Check if any offsets are needed
-            IF (pCount(7 DOWNTO 3) > "1010") THEN
-                suOffset := "1010";
-            ELSE
-                suOffset := "0000";
-            END IF;
 
-            IF (pCount(3 DOWNTO 0) > "0110") THEN
-                slOffset := "0110";
-            ELSE 
-                slOffset := "0000";
-            END IF;
-            mOffset := "00";
-
-            --Concatenate Offsets
-            iOffset(9 DOWNTO 8) := mOffset; 
-            iOffset(7 DOWNTO 4) := suOffset;
-            iOffset(3 DOWNTO 0) := slOffset;
-
-            --If timer hasnt reached the end update the final count
-            IF (iCount > Data_In) THEN
-                Time_Out <= '1';
-            ELSE
-                Time_Out <= '0';
-                fCount := pCount - iOffset;
-                --Count <= fCount;
-                --COUNT1 <= iCount;
-            END IF;
-
-            fsu <= fCount(7 DOWNTO 4);
-            fm(3 DOWNTO 2) <= "00";
-            fm(1 DOWNTO 0) <= fCount(9 DOWNTO 8);
             
-            fsl <= fCount(3 DOWNTO 0);
-
-            --fsu <= "0001";
-            --fsl <= "0001";
-
-
-
-        --END IF;
+        ----IF (rising_edge(tClk)) THEN
+        --    IF (rising_edge(tStart)) THEN
+        --        --Initialise the first digit and 7seg converters
+        --        iDirection <= '1';
+        --        slInit <= '0';
+        --        slEnable <= '1';
+        --        iall_off <= '0';
+        --        
+        --        --If the first digit is about to overflow enable the second seconds digit for one clock cycle
+        --        IF (slQ = "1001") THEN
+        --        
+        --            
+        --            --If the second digit is about to overflow (over 5) reset it and enable the minutes digit for one clock cycle
+        --            IF (suQ = "0101") THEN
+        --                mInit <= '0';
+        --                mEnable <= '1';
+        --                suInit <= '1';                    
+        --            ELSE
+        --                suInit <= '0';
+        --                mEnable <= '0';
+        --            END IF;
+        --        
+        --            suEnable <= '1';
+        --        
+        --        ELSE
+        --            mEnable <= '0';
+        --            suEnable <= '0';
+        --        
+        --        END IF;
+        --    --If the timer is off reset all bits and set Time_Out
+        --    ELSE
+        --        mInit <= '1';
+        --        suInit <= '1';
+        --        slInit <= '1';
+        --        Time_Out <= '1';
+        --        iall_off <= '0';
+        --    END IF;
+        --
+        --    --Concatenate internal Count variable
+        --    iCount(9 DOWNTO 8) := mQ(1 DOWNTO 0); 
+        --    iCount(7 DOWNTO 4) := suQ;
+        --    iCount(3 DOWNTO 0) := slQ;
+--
+        --    --Calculate preliminary Count by subtracting the current count from Data_In
+        --    pCount := Data_In - iCount;
+--
+        --    --Check if any offsets are needed
+        --    IF (pCount(7 DOWNTO 3) > "1010") THEN
+        --        suOffset := "1010";
+        --    ELSE
+        --        suOffset := "0000";
+        --    END IF;
+--
+        --    IF (pCount(3 DOWNTO 0) > "0110") THEN
+        --        slOffset := "0110";
+        --    ELSE 
+        --        slOffset := "0000";
+        --    END IF;
+        --    mOffset := "00";
+--
+        --    --Concatenate Offsets
+        --    iOffset(9 DOWNTO 8) := mOffset; 
+        --    iOffset(7 DOWNTO 4) := suOffset;
+        --    iOffset(3 DOWNTO 0) := slOffset;
+--
+        --    --If timer hasnt reached the end update the final count
+        --    IF (iCount > Data_In) THEN
+        --        Time_Out <= '1';
+        --    ELSE
+        --        Time_Out <= '0';
+        --        fCount := pCount - iOffset;
+        --        --Count <= fCount;
+        --        --COUNT1 <= iCount;
+        --    END IF;
+--
+        --    fsu <= fCount(7 DOWNTO 4);
+        --    fm(3 DOWNTO 2) <= "00";
+        --    fm(1 DOWNTO 0) <= fCount(9 DOWNTO 8);
+        --    
+        --    fsl <= fCount(3 DOWNTO 0);
+--
+        --    --fsu <= "0001";
+        --    --fsl <= "0001";
+--
+--
+--
+        ----END IF;
         
     END PROCESS;
 END ARCHITECTURE Counters;
