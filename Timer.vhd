@@ -45,6 +45,7 @@ ARCHITECTURE Counters OF Timer IS
             Clk_In: IN STD_LOGIC;
             Clk_Out: OUT STD_LOGIC
         );
+    END COMPONENT;
 BEGIN
 
     mBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
@@ -53,7 +54,7 @@ BEGIN
     mCon: BCDto7SEG PORT MAP(BCD_in => fm, all_off => iall_off, LED_out => mOut);
     suCon: BCDto7SEG PORT MAP(BCD_in => fsu, all_off => iall_off, LED_out => suOut);
     slCon: BCDto7SEG PORT MAP(BCD_in => fsl, all_off => iall_off, LED_out => slOut);
-    ps: Prescaler(Clk_In => tClk, Clk_Out => oClk);
+    ps: Prescaler PORT MAP(Clk_In => tClk, Clk_Out => oClk);
 
     PROCESS(tStart, tClk)
     VARIABLE iCount, iOffset, pCount, fCount: STD_LOGIC_VECTOR(9 DOWNTO 0); 
