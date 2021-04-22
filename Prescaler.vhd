@@ -6,20 +6,23 @@ use IEEE.numeric_std.all;
 ENTITY Prescaler IS
     PORT (
         Clk_In: IN STD_LOGIC;
-        Clk_Out: OUT STD_LOGIC := 1;
+        Clk_Out: OUT STD_LOGIC
     );
-END ENTITY Timer;
+END ENTITY Prescaler;
 
 ARCHITECTURE divider OF Prescaler IS
 BEGIN
-    VARIABLE Count: INTEGER := 0;
+    PROCESS(Clk_In)
+        VARIABLE Count: integer;
+        VARIABLE iClk_Out: STD_LOGIC := '0';
     BEGIN
         IF (rising_edge(Clk_In)) THEN
             Count := Count + 1;
             IF (Count > 25000000) THEN
-                Clk_Out = NOT Clk_Out;
-                Count = 0;
+                iClk_Out := NOT iClk_Out;
+                Count := 0;
             END IF;
+            Clk_Out <= iClk_Out;
         END IF;
     END PROCESS;
 
