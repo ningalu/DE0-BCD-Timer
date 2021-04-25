@@ -86,7 +86,7 @@ BEGIN
     VARIABLE fOut: STD_LOGIC_VECTOR(9 DOWNTO 0);
 
     BEGIN
-        IF ((Start = '0') OR (iTime_Out = '1')) THEN
+        IF (iTime_Out = '1') THEN
             --Enable all 3 BCDs so they can be reinitialised
             mEnable <= '1';
             suEnable <= '1';
@@ -95,6 +95,22 @@ BEGIN
             mInit <= '1';
             suInit <= '1';
             slInit <= '1';
+            --Turn off all 7segs when the time is up
+            iall_off <= '1';
+        END IF;
+
+        IF (Start = '0') THEN
+            --Enable all 3 BCDs so they can be reinitialised
+            mEnable <= '1';
+            suEnable <= '1';
+            slEnable <= '1';
+            --Initialise all BCDs so they reset to 0
+            mInit <= '1';
+            suInit <= '1';
+            slInit <= '1';
+            --Reset Time_Out and turn on all 7segs on reset
+            iTime_Out := '0';
+            iall_off <= '0';
         ELSE
             --Disable init to stop forcing the BCDs to 0
             mInit <= '0';
@@ -104,7 +120,6 @@ BEGIN
             mEnable <= '0';
             suEnable <= '0';
             slEnable <= '1';
-
             --Enable the BCD for the 10s of seconds every time the 1s of seconds hits 9
             --slQ cannot exceed 9 by definition
             IF (slQ = "1001") THEN
@@ -133,18 +148,18 @@ BEGIN
         --Calculate difference only if final count isn't reached
         IF (Data_In >= fullQ) THEN
 
-            iTime_Out := '0';
+            --iTime_Out := '0';
             diff := Data_In - fullQ;
 
             --Determine if offsets are necessary
-            IF (diff(7 DOWNTO 4) > "1010") THEN
+            IF (diff(7 DOWNTO 4) > "0101") THEN
                 suOffset := "1010";
             ELSE
                 suOffset := "0000";
             END IF;
 
             IF (diff(3 DOWNTO 0) > "1001") THEN
-                slOffset := "1001";
+                slOffset := "0110";
             ELSE
                 slOffset := "0000";
             END IF;
@@ -159,6 +174,7 @@ BEGIN
             fOut := diff - fullOffset;
         ELSE
             iTime_Out := '1';
+
         END IF;
 
         --Set 7seg inputs
