@@ -87,7 +87,7 @@ BEGIN
     VARIABLE fOut: STD_LOGIC_VECTOR(9 DOWNTO 0);
 
     BEGIN
-        IF (Start = '1') THEN
+        IF ((Start = '0') OR (iTime_Out = '0')) THEN
             --Enable all 3 BCDs so they can be reinitialised
             mEnable <= '1';
             suEnable <= '1';
@@ -134,7 +134,7 @@ BEGIN
         --Calculate difference only if final count isn't reached
         IF (Data_In >= fullQ) THEN
 
-            Time_Out <= '0';
+            iTime_Out := '0';
             diff := Data_In - fullQ;
 
             --Determine if offsets are necessary
@@ -159,7 +159,7 @@ BEGIN
 
             fOut := diff - fullOffset;
         ELSE
-            Time_Out <= '1';
+            iTime_Out := '1';
         END IF;
 
         --Set 7seg inputs
@@ -167,6 +167,8 @@ BEGIN
         fmQ(1 DOWNTO 0) <= fOut(9 DOWNTO 8);
         fsuQ <= fOut(7 DOWNTO 4);
         fslQ <= fOut(3 DOWNTO 0);
+
+        Time_Out <= iTime_Out;
         
     END PROCESS;
 END ARCHITECTURE Counter;
