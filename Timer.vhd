@@ -59,9 +59,9 @@ BEGIN
     ps: Prescaler PORT MAP(Clk_In => Clk, Clk_Out => pClk);
 
     --Assign iDirection as the universal direction, oClk as the universal Clock, and the individual internal signals for the rest
-    mBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
-    suBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
-    slBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
+    mBCD: BCD PORT MAP (Clk => pClk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
+    suBCD: BCD PORT MAP (Clk => pClk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
+    slBCD: BCD PORT MAP (Clk => pClk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
 
     --Assign inputs as the final Q outputs after processing, all_off as the helper signal, and outputs as the respective Timer outputs
     mCon: BCDto7SEG PORT MAP(BCD_in => fmQ, all_off => iall_off, LED_out => mOut);
