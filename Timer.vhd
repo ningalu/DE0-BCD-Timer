@@ -149,7 +149,7 @@ BEGIN
         fullQ(3 DOWNTO 0) := slQ;
 
         --Calculate difference only if final count isn't reached and input is valid
-        IF ((Data_In >= fullQ) AND (Data_In(7 DOWNTO 4) < "1010") AND (Data_In(3 DOWNTO 0) < "1010")) THEN
+        IF ((Data_In >= fullQ) AND (Data_In(7 DOWNTO 4) < "0101") AND (Data_In(3 DOWNTO 0) < "1010")) THEN
 
             --iTime_Out := '0';
             diff := Data_In - fullQ;
