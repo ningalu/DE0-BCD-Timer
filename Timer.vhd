@@ -143,8 +143,8 @@ BEGIN
                 suOffset := "0000";
             END IF;
 
-            IF (diff(3 DOWNTO 0) >= "0110") THEN
-                slOffset := "0110";
+            IF (diff(3 DOWNTO 0) >= "1001") THEN
+                slOffset := "1001";
             ELSE
                 slOffset := "0000";
             END IF;
