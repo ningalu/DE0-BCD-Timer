@@ -73,6 +73,18 @@ BEGIN
 
     --The Timer should be sensitive to Clock signals and the Start signal
     PROCESS(Clk, Start)
+    
+    --Container for concatenation of all 3 BCD outputs
+    VARIABLE fullQ: STD_LOGIC_VECTOR(9 DOWNTO 0); 
+
+    VARIABLE diff: STD_LOGIC_VECTOR(9 DOWNTO 0);
+
+    --Variables for different offset values
+    VARIABLE mOffset, suOffset, slOffset: STD_LOGIC_VECTOR(3 DOWNTO 0);
+    VARIABLE fullOffset: STD_LOGIC_VECTOR(9 DOWNTO 0);
+
+    --Final output variable for convenience due to method of calculation
+    VARIABLE fOut: STD_LOGIC_VECTOR(9 DOWNTO 0);
 
     BEGIN
         IF (Start = '1') THEN
@@ -114,9 +126,44 @@ BEGIN
 
         END IF;
 
-        fmQ <= mQ;
-        fsuQ <= suQ;
-        fslQ <= slQ;
+        --Concatenate BCD outputs to one full number
+        fullQ(9 DOWNTO 8) := mQ(1 DOWNTO 0);
+        fullQ(7 DOWNTO 4) := suQ;
+        fullQ(3 DOWNTO 0) := slQ;
+
+        IF (Data_In >= fullQ) THEN
+
+            Time_Out <= '0';
+            diff := Data_In - fullQ;
+
+            --Determine if offsets are necessary
+            IF (diff(7 DOWNTO 4) > "1010") THEN
+                suOffset := "1010";
+            ELSE
+                suOffset := "0000";
+            END IF;
+
+            IF (diff(3 DOWNTO 0) > "0110") THEN
+                slOffset := "0110";
+            ELSE
+                slOffset := "0000";
+            END IF;
+
+            mOffset := "0000";
+
+            --Concatenate offsets
+            fullOffset(9 DOWNTO 8) := mOffset(1 DOWNTO 0);
+            fullOffset(7 DOWNTO 4) := suOffset;
+            fullOffset(3 DOWNTO 0) := slOffset;
+
+            fOut := diff - fullOffset;
+        ELSE
+            Time_Out <= '1';
+        END IF;
+
+        fmQ <= "00" & fullOffset(1 DOWNTO 0);
+        fsuQ <= fullOffset(7 DOWNTO 4);
+        fslQ <= fullOffset(3 DOWNTO 0);
         
     END PROCESS;
 END ARCHITECTURE Counter;
