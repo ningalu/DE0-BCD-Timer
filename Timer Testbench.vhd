@@ -22,7 +22,7 @@ Architecture Test OF TimerBench IS
         );
     END COMPONENT;
 BEGIN
-    DUT: Timer Port Map (Data_In => t_Data_In, tClk => t_tClk, tStart => t_tStart, Time_Out => t_Time_Out, mOut => t_mOut, suOut => t_suOut, slOut => t_slOut);
+    DUT: Timer Port Map (Data_In => t_Data_In, Clk => t_tClk, Start => t_tStart, Time_Out => t_Time_Out, mOut => t_mOut, suOut => t_suOut, slOut => t_slOut);
 
     init: PROCESS
     BEGIN
