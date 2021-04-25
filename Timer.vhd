@@ -137,13 +137,13 @@ BEGIN
             diff := Data_In - fullQ;
 
             --Determine if offsets are necessary
-            IF (diff(7 DOWNTO 4) >= "1010") THEN
+            IF (diff(7 DOWNTO 4) > "1010") THEN
                 suOffset := "1010";
             ELSE
                 suOffset := "0000";
             END IF;
 
-            IF (diff(3 DOWNTO 0) >= "1001") THEN
+            IF (diff(3 DOWNTO 0) > "1001") THEN
                 slOffset := "1001";
             ELSE
                 slOffset := "0000";
