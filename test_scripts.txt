@@ -10,9 +10,9 @@ quit -sim
 vsim -gui work.timerbench 
 add wave -position end  sim:/timerbench/t_tStart
 add wave -position end  sim:/timerbench/t_tClk
+add wave -position end  sim:/timerbench/t_mOut
 add wave -position end  sim:/timerbench/t_suOut
 add wave -position end  sim:/timerbench/t_slOut
-add wave -position end  sim:/timerbench/t_mOut
 add wave -position end  sim:/timerbench/t_Time_Out
 add wave -position end  sim:/timerbench/t_Data_In
 
