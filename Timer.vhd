@@ -161,9 +161,9 @@ BEGIN
             Time_Out <= '1';
         END IF;
 
-        fmQ <= "00" & fullOffset(1 DOWNTO 0);
-        fsuQ <= fullOffset(7 DOWNTO 4);
-        fslQ <= fullOffset(3 DOWNTO 0);
+        fmQ <= "00" & fOut(1 DOWNTO 0);
+        fsuQ <= fOut(7 DOWNTO 4);
+        fslQ <= fOut(3 DOWNTO 0);
         
     END PROCESS;
 END ARCHITECTURE Counter;
