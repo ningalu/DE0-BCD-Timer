@@ -62,9 +62,9 @@ BEGIN
     ps: Prescaler PORT MAP(Clk_In => Clk, Clk_Out => pClk);
 
     --Assign iDirection as the universal direction, oClk as the universal Clock, and the individual internal signals for the rest
-    mBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
-    suBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
-    slBCD: BCD PORT MAP (Clk => oClk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
+    mBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => mInit, Enable => mEnable, Q => mQ);
+    suBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => suInit, Enable => suEnable, Q => suQ);
+    slBCD: BCD PORT MAP (Clk => Clk, Direction => iDirection, Init => slInit, Enable => slEnable, Q => slQ);
 
     --Assign inputs as the final Q outputs after processing, all_off as the helper signal, and outputs as the respective Timer outputs
     mCon: BCDto7SEG PORT MAP(BCD_in => fmQ, all_off => iall_off, LED_out => mOut);
@@ -72,9 +72,52 @@ BEGIN
     slCon: BCDto7SEG PORT MAP(BCD_in => fslQ, all_off => iall_off, LED_out => slOut);
 
     --The Timer should be sensitive to Clock signals and the Start signal
-    PROCESS(Clk, Start)
+    PROCESS(oClk, Start)
+        IF (Start = '1') THEN
+            --Enable all 3 BCDs so they can be reinitialised
+            mEnable <= '1';
+            suEnable <= '1';
+            slEnable <= '1';
+            --Initialise all BCDs so they reset to 0
+            mInit <= '1';
+            suInit <= '1';
+            slInit <= '1';
+        ELSE
+            --Disable init to stop forcing the BCDs to 0
+            mInit <= '0';
+            suInit <= '0';
+            slInit <= '0';
+            --Disable all BCDs except the lower seconds
+            mEnable <= '0';
+            suEnable <= '0';
+            slEnable <= '1';
 
-    
+            --Enable the BCD for the 10s of seconds every time the 1s of seconds hits 9
+            --slQ cannot exceed 9 by definition
+            IF (slQ = "1001") THEN
+
+                --If the 10s of seconds is 5 at the same time the 1s of seconds is 9 reset the 10s of seconds and allow the minute to tick up
+                IF (suQ = "0101") THEN
+                    suInit <= '1';
+                    mEnable <= '1';
+                ELSE
+                    suInit <= '0';
+                    mEnable <= '0';
+                END IF;
+
+                suEnable <= '1';
+            ELSE
+                suEnable <= '0';
+            END IF;
+
+
+
+
+        END IF;
+        
+    END PROCESS;
+END ARCHITECTURE Counter;
+
 
     
     
