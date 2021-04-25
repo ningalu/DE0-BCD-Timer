@@ -131,6 +131,7 @@ BEGIN
         fullQ(7 DOWNTO 4) := suQ;
         fullQ(3 DOWNTO 0) := slQ;
 
+        --Calculate difference only if final count isn't reached
         IF (Data_In >= fullQ) THEN
 
             Time_Out <= '0';
@@ -161,7 +162,9 @@ BEGIN
             Time_Out <= '1';
         END IF;
 
-        fmQ <= "00" & fOut(1 DOWNTO 0);
+        --Set 7seg inputs
+        fmQ(3 DOWNTO 2) <= "00";
+        fmQ(1 DOWNTO 0) <= fOut(9 DOWNTO 8);
         fsuQ <= fOut(7 DOWNTO 4);
         fslQ <= fOut(3 DOWNTO 0);
         
