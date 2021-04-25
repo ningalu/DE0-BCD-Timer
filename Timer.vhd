@@ -25,12 +25,12 @@ ARCHITECTURE Counter OF Timer IS
 
     --Internal signals for the 3 BCDs
     SIGNAL mEnable, suEnable, slEnable: STD_LOGIC;
-    SIGNAL mInit, suInit, suEnable: STD_LOGIC;
+    SIGNAL mInit, suInit, slInit: STD_LOGIC;
     SIGNAL iDirection: STD_LOGIC := '1';
-    SIGNAL mQ, suQ, slQ: STD_LOGIC(3 DOWNTO 0);
+    SIGNAL mQ, suQ, slQ: STD_LOGIC_VECTOR(3 DOWNTO 0);
 
     --Final processed outputs of the BCDs
-    SIGNAL fmQ, fsuQ, fslQ: STD_LOGIC(3 DOWNTO 0);
+    SIGNAL fmQ, fsuQ, fslQ: STD_LOGIC_VECTOR(3 DOWNTO 0);
 
     --Declare Prescaler component
     COMPONENT Prescaler IS
@@ -72,7 +72,9 @@ BEGIN
     slCon: BCDto7SEG PORT MAP(BCD_in => fslQ, all_off => iall_off, LED_out => slOut);
 
     --The Timer should be sensitive to Clock signals and the Start signal
-    PROCESS(oClk, Start)
+    PROCESS(Clk, Start)
+
+    BEGIN
         IF (Start = '1') THEN
             --Enable all 3 BCDs so they can be reinitialised
             mEnable <= '1';
