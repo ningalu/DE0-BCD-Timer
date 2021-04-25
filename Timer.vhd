@@ -112,10 +112,11 @@ BEGIN
                 suEnable <= '0';
             END IF;
 
-
-
-
         END IF;
+
+        fmQ <= mQ;
+        fsuQ <= suQ;
+        fslQ <= slQ;
         
     END PROCESS;
 END ARCHITECTURE Counter;
