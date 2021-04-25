@@ -158,7 +158,7 @@ BEGIN
 
             fOut := diff - fullOffset;
         ELSE
-            iTime_Out <= '1';
+            iTime_Out := '1';
         END IF;
 
         --Set 7seg inputs
