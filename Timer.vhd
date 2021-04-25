@@ -14,9 +14,6 @@ ENTITY Timer IS
 END ENTITY Timer;
 
 ARCHITECTURE Counter OF Timer IS
-    --Helper signal to read Time_Out
-    SIGNAL iTime_Out: STD_LOGIC;
-
     --Helper signal to get the prescaled Clk value
     SIGNAL pClk: STD_LOGIC;
 
@@ -74,6 +71,8 @@ BEGIN
     --The Timer should be sensitive to Clock signals and the Start signal
     PROCESS(Clk, Start)
     
+    --Helper variable to read Time_Out
+    VARIABLE iTime_Out: STD_LOGIC := '0';
     --Container for concatenation of all 3 BCD outputs
     VARIABLE fullQ: STD_LOGIC_VECTOR(9 DOWNTO 0); 
 
@@ -87,7 +86,7 @@ BEGIN
     VARIABLE fOut: STD_LOGIC_VECTOR(9 DOWNTO 0);
 
     BEGIN
-        IF ((Start = '0') OR (iTime_Out = '0')) THEN
+        IF ((Start = '0') OR (iTime_Out = '1')) THEN
             --Enable all 3 BCDs so they can be reinitialised
             mEnable <= '1';
             suEnable <= '1';
@@ -159,7 +158,7 @@ BEGIN
 
             fOut := diff - fullOffset;
         ELSE
-            iTime_Out := '1';
+            iTime_Out <= '1';
         END IF;
 
         --Set 7seg inputs
