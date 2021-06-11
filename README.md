@@ -1,4 +1,4 @@
 # DE0-BCD-Timer
-cs305 task to implement a timer with bcds
+The assigned task for Lab 3 in COMPSYS305 is to implement a 4 digit BCD timer that counts down from a number selected by the switches on the DE0 dev board
 
-there is currently an error with the synchronicity of the Start signal
+There is an issue with the synchronicity of the Start signal
